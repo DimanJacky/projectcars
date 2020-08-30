@@ -7,16 +7,16 @@ export default class Cars extends Component {
 
         const {cars} = this.props
 
+        // console.log(cars)
+
         return (
             <div>
-                <div>
                     {
                         cars.map((car, i) => {
-                            const {name, year, color, namedriver} = car
+                            const {name, year, color, namedriver, id} = car
                             return <Car key={i} {...car} />
                         })
                     }
-                </div>
             </div>
         )
     }
