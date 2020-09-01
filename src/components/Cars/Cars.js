@@ -8,42 +8,44 @@ export default class Cars extends Component {
         cars: []
     }
 
-    componentDidMount() {
-        //console.log('componentDidMount')
-        const carsResponse = axios.post('http://ajax/projectcars/')
-            .then(response => {
-                this.setState({
-                    cars: response.data
-                })
-            })
-
-        //console.log(carsResponse.data)
-
+    renderCars() {
+        return this.state.cars.map((car, i) => {
+            const {name, year, color, namedriver, id} = car
+            return <Car key={i} {...car} />
+        })
     }
 
-    createCarsList = async () => {
-        // const carsResponse = await axios.post('http://ajax/projectcars/').then(response => console.log(response))
+    async componentDidMount() {
+        try {
+            const response = await axios.post('http://ajax/projectcars/');
 
-        // return carsResponse
+            this.setState({cars: response.data})
+
+            console.log(response.data)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     render() {
-        console.log("render")
-        console.log(this.state)
+        // console.log("render")
+        // console.log(this.state)
 
-        const cars = this.state.cars
+        // const cars = this.state.cars
 
         //console.log(Array.isArray(cars))
 
         return (
             <div>
-                    {
-                        (cars.length != 0) ?
-                        cars.map((car, i) => {
-                            const {name, year, color, namedriver, id} = car
-                            return <Car key={i} {...car} />
-                        }) : null
-                    }
+                    {/*{*/}
+                    {/*    (cars.length != 0) ?*/}
+                    {/*    cars.map((car, i) => {*/}
+                    {/*        const {name, year, color, namedriver, id} = car*/}
+                    {/*        return <Car key={i} {...car} />*/}
+                    {/*    }) : null*/}
+                    {/*}*/}
+
+                {this.renderCars()}
             </div>
         )
     }
