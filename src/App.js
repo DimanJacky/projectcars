@@ -1,24 +1,30 @@
 import React from 'react'
 import {Route, NavLink, Switch, Redirect, withRouter} from "react-router-dom"
+import {connect} from 'react-redux'
 
 import About from "./components/About/About";
 import Cars from "./components/Cars/Cars";
-import Car from "./components/Cars/Car/Car";
 import Cardetail from "./components/Cars/Cardetail/Cardetail";
+import {changeNameApp, changeNameButtonApp} from "./store/actions/actions";
 
 class App extends React.Component {
 
-    state = {
-        cars: [
-            {name: 'audi', year: 2005, color: 'red', namedriver: 'Дормидонт', id: 111},
-            {name: 'шкода', year: 2005, color: 'red', namedriver: 'Дормидонт', id: 222},
-            {name: 'бмв', year: 2005, color: 'red', namedriver: 'Дормидонт', id: 333},
-        ]
+    toggleCars = () => {
+        console.log(1)
+    }
+
+    changeName = (name) => {
+        this.props.onChangeName(name);
+    }
+
+    changeNameButton = (name) => {
+        this.props.onChangeNameButton(name);
     }
 
     render() {
-
-        const {cars} = this.state
+        // console.log(this.props)
+        const {cars} = this.props
+        // console.log(cars)
 
         return (
             <div className="App">
@@ -31,10 +37,12 @@ class App extends React.Component {
                         return <NavLink key={i} to={`/cars/${id}`}>Car111</NavLink>
                     })
                 }
-                <h1>Автомобили</h1>
+                <h1>{this.props.nameButton}</h1>
+                <p>{this.props.name}</p>
+                <button onClick={this.toggleCars}>Toggle cars</button>
                 <input type="text" id="newColorItem1"/><button>Сменить цвет</button><br />
                 <input type="text" id="newNameItem0"/><button>Сменить водителя</button><br />
-                <input type="text" id="name"/><button>Сменить название</button>
+                <input type="text" onChange={event => this.changeName(event.target.value)} /><button onClick={() => this.changeNameButton(" change")}>Сменить название всей страницы</button>
 
                 <Switch>
                     <Route path="/about/" exact component={About} />
@@ -50,4 +58,19 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        cars: state.cars.cars,
+        name: state.app.name,
+        nameButton: state.app.nameButton,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onChangeName: (name) => dispatch(changeNameApp(name)),
+        onChangeNameButton: (name) => dispatch(changeNameButtonApp(name)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
