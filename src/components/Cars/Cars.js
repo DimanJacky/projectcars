@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import Car from "./Car/Car";
 import axios from 'axios'
+import Loader from "../UI/Loader/Loader";
 
 export default class Cars extends Component {
 
     state = {
-        cars: []
+        cars: [],
+        loading: true
     }
 
     renderCars() {
@@ -19,7 +21,7 @@ export default class Cars extends Component {
         try {
             const response = await axios.post('http://ajax/projectcars/');
 
-            this.setState({cars: response.data})
+            this.setState({cars: response.data, loading: false})
         } catch (e) {
             console.log(e)
         }
@@ -29,7 +31,15 @@ export default class Cars extends Component {
 
         return (
             <div>
-                {this.renderCars()}
+
+                {
+                    this.state.loading ?
+                        <div style={{backgroundColor: '#555'}}>
+                            <Loader/>
+                        </div> :
+                        this.renderCars()
+                }
+
             </div>
         )
     }
